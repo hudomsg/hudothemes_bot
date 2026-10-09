@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Telegram Theme Studio</title>
-  <!-- Подключение официального скрипта Telegram Mini Apps -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root {
@@ -17,12 +16,7 @@
       --accent-blue: #2481cc;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
 
     body {
       background-color: var(--bg-dark);
@@ -41,7 +35,7 @@
       gap: 14px;
     }
 
-    /* --- МОКАП ДИАЛОГА TELEGRAM --- */
+    /* Мокап чата Telegram */
     .mockup-wrapper {
       background: var(--header-dark);
       border-radius: 16px;
@@ -52,7 +46,6 @@
       flex-direction: column;
     }
 
-    /* Шапка чата */
     .chat-header {
       background-color: var(--header-dark);
       padding: 10px 14px;
@@ -75,23 +68,10 @@
       font-size: 14px;
     }
 
-    .header-info {
-      display: flex;
-      flex-direction: column;
-    }
+    .header-info { display: flex; flex-direction: column; }
+    .header-name { font-size: 14px; font-weight: 600; color: #fff; }
+    .header-status { font-size: 11px; color: #5288c1; }
 
-    .header-name {
-      font-size: 14px;
-      font-weight: 600;
-      color: #fff;
-    }
-
-    .header-status {
-      font-size: 11px;
-      color: #5288c1;
-    }
-
-    /* Экран чата с сообщениями */
     .chat-screen {
       height: 230px;
       padding: 14px;
@@ -106,7 +86,6 @@
       position: relative;
     }
 
-    /* Облачка сообщений */
     .bubble {
       max-width: 78%;
       padding: 8px 12px;
@@ -127,12 +106,10 @@
       gap: 3px;
     }
 
-    /* Входящее сообщение и хвостик */
     .msg-incoming {
       align-self: flex-start;
       border-radius: 14px 14px 14px 4px;
     }
-
     .msg-incoming::before {
       content: "";
       position: absolute;
@@ -144,12 +121,10 @@
       clip-path: polygon(100% 0, 0 100%, 100% 100%);
     }
 
-    /* Исходящее сообщение и хвостик */
     .msg-outgoing {
       align-self: flex-end;
       border-radius: 14px 14px 4px 14px;
     }
-
     .msg-outgoing::after {
       content: "";
       position: absolute;
@@ -161,7 +136,6 @@
       clip-path: polygon(0 0, 100% 100%, 0 100%);
     }
 
-    /* Нижняя строка ввода */
     .chat-input-bar {
       background-color: var(--header-dark);
       padding: 8px 12px;
@@ -170,7 +144,6 @@
       gap: 10px;
       border-top: 1px solid rgba(0, 0, 0, 0.2);
     }
-
     .chat-input-placeholder {
       flex: 1;
       font-size: 13px;
@@ -180,7 +153,7 @@
       border-radius: 18px;
     }
 
-    /* --- ПАНЕЛЬ НАСТРОЕК ТЕМЫ --- */
+    /* Панель настроек */
     .settings-panel {
       background-color: var(--card-dark);
       border-radius: 16px;
@@ -197,13 +170,8 @@
       align-items: center;
     }
 
-    label {
-      font-size: 13px;
-      font-weight: 500;
-      color: #e0e5ea;
-    }
+    label { font-size: 13px; font-weight: 500; color: #e0e5ea; }
 
-    /* Контролы формы */
     input[type="color"] {
       -webkit-appearance: none;
       border: none;
@@ -213,21 +181,10 @@
       cursor: pointer;
       background: none;
     }
+    input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+    input[type="color"]::-webkit-color-swatch { border: 1px solid var(--border-dark); border-radius: 6px; }
 
-    input[type="color"]::-webkit-color-swatch-wrapper {
-      padding: 0;
-    }
-
-    input[type="color"]::-webkit-color-swatch {
-      border: 1px solid var(--border-dark);
-      border-radius: 6px;
-    }
-
-    input[type="range"] {
-      accent-color: var(--accent-blue);
-      width: 100%;
-      cursor: pointer;
-    }
+    input[type="range"] { accent-color: var(--accent-blue); width: 100%; cursor: pointer; }
 
     input[type="file"] {
       font-size: 12px;
@@ -252,7 +209,6 @@
       margin-top: 5px;
     }
 
-    /* Кнопка отправки */
     .btn-create {
       background: var(--accent-blue);
       color: #fff;
@@ -264,18 +220,12 @@
       cursor: pointer;
       width: 100%;
       margin-top: 5px;
-      transition: background 0.15s;
     }
-
-    .btn-create:active {
-      opacity: 0.85;
-    }
+    .btn-create:active { opacity: 0.85; }
   </style>
 </head>
 <body>
   <div class="app-container">
-
-    <!-- ДИЗАЙН ЧАТА TELEGRAM С ЖИВЫМ ПРЕДПРОСМОТРОМ -->
     <div class="mockup-wrapper">
       <div class="chat-header">
         <div class="header-avatar">ПД</div>
@@ -286,21 +236,14 @@
       </div>
 
       <div class="chat-screen" id="chatScreen">
-        <!-- Сообщение собеседника -->
         <div class="bubble msg-incoming" id="bubbleIn">
           Привет! Вот так выглядит твоя новая тема? 🔥
-          <div class="bubble-meta">
-            <span>12:45</span>
-          </div>
+          <div class="bubble-meta"><span>12:45</span></div>
         </div>
 
-        <!-- Мое сообщение -->
         <div class="bubble msg-outgoing" id="bubbleOut">
           Да, дизайн и прозрачность настраиваются онлайн!
-          <div class="bubble-meta">
-            <span>12:46</span>
-            <span>✓✓</span>
-          </div>
+          <div class="bubble-meta"><span>12:46</span><span>✓✓</span></div>
         </div>
       </div>
 
@@ -311,27 +254,22 @@
       </div>
     </div>
 
-    <!-- ПАНЕЛЬ НАСТРОЕК -->
     <div class="settings-panel">
-      <!-- Фоновое изображение -->
       <div>
         <label>🖼️ Фоновое изображение</label>
         <input type="file" id="bgInput" accept="image/*">
       </div>
 
-      <!-- Входящие сообщения -->
       <div class="control-row">
         <label>💬 Сообщения собеседника</label>
         <input type="color" id="inColor" value="#182533">
       </div>
 
-      <!-- Исходящие сообщения -->
       <div class="control-row">
         <label>🚀 Мои сообщения</label>
         <input type="color" id="outColor" value="#2b5278">
       </div>
 
-      <!-- Прозрачность -->
       <div>
         <div class="control-row">
           <label>👁️ Прозрачность сообщений</label>
@@ -340,13 +278,11 @@
         <input type="range" id="opacityRange" min="0.1" max="1" step="0.05" value="0.9" style="margin-top:5px;">
       </div>
 
-      <!-- Цвет текста -->
       <div class="control-row">
         <label>✏️ Цвет текста</label>
         <input type="color" id="textColor" value="#ffffff">
       </div>
 
-      <!-- Платформа -->
       <div>
         <label>📱 Платформа</label>
         <select id="platformSelect">
@@ -358,15 +294,16 @@
 
       <button class="btn-create" onclick="sendThemeData()">🚀 Сделать тему</button>
     </div>
-
   </div>
 
   <script>
-    // Инициализация Telegram WebApp
     const tg = window.Telegram?.WebApp;
     if (tg) {
       tg.expand();
       tg.ready();
+      tg.MainButton.setText("🚀 СДЕЛАТЬ ТЕМУ");
+      tg.MainButton.onClick(sendThemeData);
+      tg.MainButton.show();
     }
 
     const bgInput = document.getElementById('bgInput');
@@ -379,7 +316,6 @@
     const bubbleIn = document.getElementById('bubbleIn');
     const bubbleOut = document.getElementById('bubbleOut');
 
-    // Функция перевода HEX + Alpha в RGBA
     function hexToRgba(hex, alpha) {
       let clean = hex.replace('#', '');
       let r = parseInt(clean.substring(0, 2), 16);
@@ -388,7 +324,6 @@
       return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
 
-    // Обновление живого превью
     function updatePreview() {
       const alpha = opacityRange.value;
       opacityLabel.innerText = Math.round(alpha * 100) + '%';
@@ -404,7 +339,6 @@
       bubbleOut.style.color = txtColor;
     }
 
-    // Установка пользовательского фона на экран чата
     bgInput.addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (file) {
@@ -421,10 +355,8 @@
     opacityRange.addEventListener('input', updatePreview);
     textColor.addEventListener('input', updatePreview);
 
-    // Первичная отрисовка
     updatePreview();
 
-    // Отправка данных темы боту
     function sendThemeData() {
       const payload = {
         in_color: inColor.value,
@@ -436,8 +368,9 @@
 
       if (tg && tg.sendData) {
         tg.sendData(JSON.stringify(payload));
+        setTimeout(() => { tg.close(); }, 150);
       } else {
-        alert("Данные для отправки:\n" + JSON.stringify(payload, null, 2));
+        alert("Вне Telegram:\n" + JSON.stringify(payload, null, 2));
       }
     }
   </script>
