@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Telegram Theme Studio</title>
+  <!-- Подключение официального скрипта Telegram Mini Apps -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root {
+      --bg-dark: #0e1621;
+      --card-dark: #17212b;
+      --header-dark: #242f3d;
+      --border-dark: #2b394a;
+      --text-main: #f5f5f5;
+      --text-muted: #7f91a4;
+      --accent-blue: #2481cc;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      padding: 12px;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 420px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* --- МОКАП ДИАЛОГА TELEGRAM --- */
+    .mockup-wrapper {
+      background: var(--header-dark);
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border-dark);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Шапка чата */
+    .chat-header {
+      background-color: var(--header-dark);
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    }
+
+    .header-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #e53935, #e35d5b);
+      color: white;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .header-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .header-status {
+      font-size: 11px;
+      color: #5288c1;
+    }
+
+    /* Экран чата с сообщениями */
+    .chat-screen {
+      height: 230px;
+      padding: 14px;
+      background-color: #0e1621;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: 10px;
+      position: relative;
+    }
+
+    /* Облачка сообщений */
+    .bubble {
+      max-width: 78%;
+      padding: 8px 12px;
+      font-size: 14px;
+      line-height: 1.35;
+      position: relative;
+      word-wrap: break-word;
+      transition: background 0.1s ease, color 0.1s ease;
+    }
+
+    .bubble-meta {
+      float: right;
+      font-size: 10px;
+      margin-left: 8px;
+      margin-top: 4px;
+      opacity: 0.7;
+      display: flex;
+      gap: 3px;
+    }
+
+    /* Входящее сообщение и хвостик */
+    .msg-incoming {
+      align-self: flex-start;
+      border-radius: 14px 14px 14px 4px;
+    }
+
+    .msg-incoming::before {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: -6px;
+      width: 6px;
+      height: 10px;
+      background-color: inherit;
+      clip-path: polygon(100% 0, 0 100%, 100% 100%);
+    }
+
+    /* Исходящее сообщение и хвостик */
+    .msg-outgoing {
+      align-self: flex-end;
+      border-radius: 14px 14px 4px 14px;
+    }
+
+    .msg-outgoing::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      right: -6px;
+      width: 6px;
+      height: 10px;
+      background-color: inherit;
+      clip-path: polygon(0 0, 100% 100%, 0 100%);
+    }
+
+    /* Нижняя строка ввода */
+    .chat-input-bar {
+      background-color: var(--header-dark);
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-top: 1px solid rgba(0, 0, 0, 0.2);
+    }
+
+    .chat-input-placeholder {
+      flex: 1;
+      font-size: 13px;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.05);
+      padding: 6px 12px;
+      border-radius: 18px;
+    }
+
+    /* --- ПАНЕЛЬ НАСТРОЕК ТЕМЫ --- */
+    .settings-panel {
+      background-color: var(--card-dark);
+      border-radius: 16px;
+      padding: 16px;
+      border: 1px solid var(--border-dark);
+      display: flex;
+      flex-direction: column;
+      gap: 13px;
+    }
+
+    .control-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #e0e5ea;
+    }
+
+    /* Контролы формы */
+    input[type="color"] {
+      -webkit-appearance: none;
+      border: none;
+      width: 38px;
+      height: 28px;
+      border-radius: 6px;
+      cursor: pointer;
+      background: none;
+    }
+
+    input[type="color"]::-webkit-color-swatch-wrapper {
+      padding: 0;
+    }
+
+    input[type="color"]::-webkit-color-swatch {
+      border: 1px solid var(--border-dark);
+      border-radius: 6px;
+    }
+
+    input[type="range"] {
+      accent-color: var(--accent-blue);
+      width: 100%;
+      cursor: pointer;
+    }
+
+    input[type="file"] {
+      font-size: 12px;
+      color: var(--text-muted);
+      background: var(--bg-dark);
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px dashed var(--border-dark);
+      width: 100%;
+      margin-top: 5px;
+    }
+
+    select {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      border: 1px solid var(--border-dark);
+      padding: 9px;
+      border-radius: 8px;
+      outline: none;
+      width: 100%;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+
+    /* Кнопка отправки */
+    .btn-create {
+      background: var(--accent-blue);
+      color: #fff;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 5px;
+      transition: background 0.15s;
+    }
+
+    .btn-create:active {
+      opacity: 0.85;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+
+    <!-- ДИЗАЙН ЧАТА TELEGRAM С ЖИВЫМ ПРЕДПРОСМОТРОМ -->
+    <div class="mockup-wrapper">
+      <div class="chat-header">
+        <div class="header-avatar">ПД</div>
+        <div class="header-info">
+          <div class="header-name">Павел Дуров</div>
+          <div class="header-status">в сети</div>
+        </div>
+      </div>
+
+      <div class="chat-screen" id="chatScreen">
+        <!-- Сообщение собеседника -->
+        <div class="bubble msg-incoming" id="bubbleIn">
+          Привет! Вот так выглядит твоя новая тема? 🔥
+          <div class="bubble-meta">
+            <span>12:45</span>
+          </div>
+        </div>
+
+        <!-- Мое сообщение -->
+        <div class="bubble msg-outgoing" id="bubbleOut">
+          Да, дизайн и прозрачность настраиваются онлайн!
+          <div class="bubble-meta">
+            <span>12:46</span>
+            <span>✓✓</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-input-bar">
+        <span>📎</span>
+        <div class="chat-input-placeholder">Сообщение...</div>
+        <span>🎙️</span>
+      </div>
+    </div>
+
+    <!-- ПАНЕЛЬ НАСТРОЕК -->
+    <div class="settings-panel">
+      <!-- Фоновое изображение -->
+      <div>
+        <label>🖼️ Фоновое изображение</label>
+        <input type="file" id="bgInput" accept="image/*">
+      </div>
+
+      <!-- Входящие сообщения -->
+      <div class="control-row">
+        <label>💬 Сообщения собеседника</label>
+        <input type="color" id="inColor" value="#182533">
+      </div>
+
+      <!-- Исходящие сообщения -->
+      <div class="control-row">
+        <label>🚀 Мои сообщения</label>
+        <input type="color" id="outColor" value="#2b5278">
+      </div>
+
+      <!-- Прозрачность -->
+      <div>
+        <div class="control-row">
+          <label>👁️ Прозрачность сообщений</label>
+          <span id="opacityLabel" style="font-size:12px; color:var(--text-muted);">90%</span>
+        </div>
+        <input type="range" id="opacityRange" min="0.1" max="1" step="0.05" value="0.9" style="margin-top:5px;">
+      </div>
+
+      <!-- Цвет текста -->
+      <div class="control-row">
+        <label>✏️ Цвет текста</label>
+        <input type="color" id="textColor" value="#ffffff">
+      </div>
+
+      <!-- Платформа -->
+      <div>
+        <label>📱 Платформа</label>
+        <select id="platformSelect">
+          <option value="Android">Android (.athem)</option>
+          <option value="Apple">Apple / iOS (.tgipa)</option>
+          <option value="Desktop">Desktop (.tdesktop-theme)</option>
+        </select>
+      </div>
+
+      <button class="btn-create" onclick="sendThemeData()">🚀 Сделать тему</button>
+    </div>
+
+  </div>
+
+  <script>
+    // Инициализация Telegram WebApp
+    const tg = window.Telegram?.WebApp;
+    if (tg) {
+      tg.expand();
+      tg.ready();
+    }
+
+    const bgInput = document.getElementById('bgInput');
+    const chatScreen = document.getElementById('chatScreen');
+    const inColor = document.getElementById('inColor');
+    const outColor = document.getElementById('outColor');
+    const opacityRange = document.getElementById('opacityRange');
+    const opacityLabel = document.getElementById('opacityLabel');
+    const textColor = document.getElementById('textColor');
+    const bubbleIn = document.getElementById('bubbleIn');
+    const bubbleOut = document.getElementById('bubbleOut');
+
+    // Функция перевода HEX + Alpha в RGBA
+    function hexToRgba(hex, alpha) {
+      let clean = hex.replace('#', '');
+      let r = parseInt(clean.substring(0, 2), 16);
+      let g = parseInt(clean.substring(2, 4), 16);
+      let b = parseInt(clean.substring(4, 6), 16);
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+
+    // Обновление живого превью
+    function updatePreview() {
+      const alpha = opacityRange.value;
+      opacityLabel.innerText = Math.round(alpha * 100) + '%';
+      
+      const inRgba = hexToRgba(inColor.value, alpha);
+      const outRgba = hexToRgba(outColor.value, alpha);
+      const txtColor = textColor.value;
+
+      bubbleIn.style.backgroundColor = inRgba;
+      bubbleIn.style.color = txtColor;
+
+      bubbleOut.style.backgroundColor = outRgba;
+      bubbleOut.style.color = txtColor;
+    }
+
+    // Установка пользовательского фона на экран чата
+    bgInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          chatScreen.style.backgroundImage = `url(${evt.target.result})`;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    inColor.addEventListener('input', updatePreview);
+    outColor.addEventListener('input', updatePreview);
+    opacityRange.addEventListener('input', updatePreview);
+    textColor.addEventListener('input', updatePreview);
+
+    // Первичная отрисовка
+    updatePreview();
+
+    // Отправка данных темы боту
+    function sendThemeData() {
+      const payload = {
+        in_color: inColor.value,
+        out_color: outColor.value,
+        opacity: opacityRange.value,
+        text_color: textColor.value,
+        platform: document.getElementById('platformSelect').value
+      };
+
+      if (tg && tg.sendData) {
+        tg.sendData(JSON.stringify(payload));
+      } else {
+        alert("Данные для отправки:\n" + JSON.stringify(payload, null, 2));
+      }
+    }
+  </script>
+</body>
+</html>
